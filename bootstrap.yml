@@ -1,0 +1,95 @@
+- hosts: localhost
+  tasks:
+
+# Update cache
+  - name: Update
+    apt: update_cache=yes
+
+# Install firmares and sys tools
+  - name: install gnome env
+    apt: name={{ item }}
+    with_items:
+      - firmware-realtek
+      - firmware-iwlwifi
+      - apt-show-versions
+      - ntp
+      - htop
+      - rsync
+
+# Install gnome
+  - name: install gnome env
+    apt: name={{ item }}
+    with_items:
+      - gnome-shell
+      - gnome-shell-extensions
+      - gnome-disk-utility
+      - gnome-tweak-tool
+
+# Install and configure shell env
+  - name: install shell env
+    apt: name={{ item }}
+    with_items:
+      - zsh
+
+# Install and configure editors
+  - name: install
+    apt: name={{ item }}
+    with_items:
+      - nano
+      - vim
+      - terminator
+      - tmux
+      - autokey-gtk
+
+# Install GUI tools
+  - name: install dev
+    apt: name={{ item }}
+    with_items:
+      - evince
+      - xsane                   # Scanner tool
+      - freecad                 # CAO tool
+      - gimp
+      - inkscape
+      - vlc
+      - vivaldi-stable
+      - flashplugin-nonfree
+      - gedit
+      - libreoffice
+
+# Install fonts
+  - name: install fonts
+    apt: name={{ item }}
+    with_items:
+      - font-manager
+
+# Install developpment environnment
+  - name: install dev
+    apt: name={{ item }}
+    with_items:
+      - make
+      - cmake
+      - autotools-dev
+      - build-essential
+      - git
+      - git-review
+      - environment-modules
+
+# Install tools
+  - name: install tools
+    apt: name={{ item }}
+    with_items:
+      - curl
+      - colordiff
+      - jq
+      - xsltproc
+      - gnuplot
+      - latex209-base
+      - r-base
+      - imagemagick
+
+# Install storage and backup tools
+  - name: install tools
+    apt: name={{ item }}
+    with_items:
+      - duplicity
+
