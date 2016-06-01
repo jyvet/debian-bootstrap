@@ -7,7 +7,7 @@
 
 # Install firmares and sys tools
   - name: install gnome env
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - firmware-realtek
       - firmware-iwlwifi
@@ -18,22 +18,28 @@
 
 # Install gnome
   - name: install gnome env
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - gnome-shell
+      - gnome-session
       - gnome-shell-extensions
       - gnome-disk-utility
       - gnome-tweak-tool
 
 # Install and configure shell env
   - name: install shell env
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - zsh
 
+  - name: use oh-my-zsh
+    git:
+      repo=https://github.com/robbyrussell/oh-my-zsh.git
+      dest="~/.oh-my-zsh"
+
 # Install and configure editors
   - name: install
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - nano
       - vim
@@ -43,7 +49,7 @@
 
 # Install GUI tools
   - name: install dev
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - evince
       - xsane                   # Scanner tool
@@ -58,13 +64,13 @@
 
 # Install fonts
   - name: install fonts
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - font-manager
 
 # Install developpment environnment
   - name: install dev
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - make
       - cmake
@@ -72,11 +78,12 @@
       - build-essential
       - git
       - git-review
+      - mercurial
       - environment-modules
 
 # Install tools
   - name: install tools
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
       - curl
       - colordiff
@@ -86,10 +93,12 @@
       - latex209-base
       - r-base
       - imagemagick
+      - python-pip
 
 # Install storage and backup tools
   - name: install tools
-    apt: name={{ item }}
+    apt: name={{ item }} state=latest
     with_items:
+      - gnupg
       - duplicity
 
