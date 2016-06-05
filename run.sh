@@ -585,8 +585,9 @@ apt-get --force-yes --yes update
 apt-get --force-yes --yes upgrade
 
 # Install Ansible
-apt-get --force-yes --yes install python-pip
-pip install ansible
+apt-get --force-yes --yes install build-essential libssl-dev libffi-dev python-dev
+easy_install pip
+pip install paramiko PyYAML Jinja2 httplib2 six ansible
 
 # Launch Ansible playbook
 cd /tmp && wget "$REPOSITORY/$ROLE"
