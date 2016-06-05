@@ -54,7 +54,8 @@
       - evince
       - xsane                   # Scanner tool
       - freecad                 # CAO tool
-      - gimp
+      - krita
+      - darktable
       - inkscape
       - vlc
       - vivaldi-stable
