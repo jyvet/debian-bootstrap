@@ -21,6 +21,21 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS #
 # IN THE SOFTWARE.                                                             #
 #                                                                              #
+####----[ FULL USAGE ]------------------------------------------------------####
+#% Synopsis:                                                                   #
+#+    {{SC_NAME}} [options...]                                                 #
+#%                                                                             #
+#% Description:                                                                #
+#%    Configure fresh debian install and download packages.                    #
+#%                                                                             #
+#% Options:                                                                    #
+#%        --disable-colors             Disable colors.                         #
+#%        --enable-colors, --colors    Enable colors.                          #
+#%    -h, --help                       Print this help.                        #
+#%    -s, --silent                     Do not print anything.                  #
+#%    -v, -vv, -vvv                    Verbosity.                              #
+#%        --version                    Print script information.               #
+#%                                                                             #
 ####----[ INFORMATION ]-----------------------------------------------------####
 #% Implementation:                                                             #
 #-    version         0.1                                                      #
@@ -501,16 +516,7 @@
         for arg in $targs; do
             local delim=''
             case $arg in
-                --active)          args="${args}-a ";;
-                --all)             args="${args}-a -k  "; enable_colors;;
-                --coreset=*)       args="${args}-c $(echo "$arg" |
-                                        sed 's/--.*=//g') ";;
-                --exclude=*)       args="${args}-e $(echo "$arg" |
-                                        sed 's/--.*=//g') ";;
                 --help)            args="${args}-h ";;
-                --kernel)          args="${args}-k ";;
-                --refresh=*)       args="${args}-r $(echo "$arg" |
-                                        sed 's/--.*=//g') ";;
                 --version)         info; exit 0;;
                 *) [[ "${arg:0:1}" == '-' ]] || delim="\""
                     args="${args}${delim}${arg}${delim} ";;
@@ -529,17 +535,7 @@
         # Parse arguments
         while getopts $options OPT; do
             case "$OPT" in
-                a)  ENABLE_ACTIVE='true'
-                    print_verbose 3 'enabling active mode';;
-                c)  CORESET="$OPTARG"
-                    print_verbose 3 'coreset defined to %s' "$CORESET";;
-                e)  EXCLUDE="$EXCLUDE,$OPTARG"
-                    print_verbose 3 'exclude list set to %s' "$EXCLUDE";;
                 h)  usage_full; exit 0;;
-                k)  ENABLE_KERNEL='true'
-                    print_verbose 3 'enabling kernel processes migration';;
-                r)  REFRESH="$OPTARG"
-                    print_verbose 3 'refresh rate set to %ds' "$REFRESH";;
                 \?) print_error $EINVOPT; usage; return $EINVOPT;;
             esac
         done
@@ -603,6 +599,10 @@
     #       None                                                               #
     gen_source()
     {
+        if [[ -z "$SILENT" ]]; then
+            print_colors "<yellow>Configuring <b>source.list</b></yellow>... "
+        fi
+
         local path='/etc/apt/sources.list'
         local ftp='http://ftp.fr.debian.org/debian/'
         local httpsec='http://security.debian.org/'
@@ -621,6 +621,10 @@
 
         # Update file
         echo -e "$SRC" > $path
+
+        if [[ -z "$SILENT" ]]; then
+            print_colors '<green>OK<green>\n'
+        fi
     }
 
     ############################################################################
@@ -629,21 +633,36 @@
     #       None                                                               #
     install_packages()
     {
-        for p in ${PACKAGES[@]}; do
-            print_colors "<yellow>Installing <b>$p</b></yellow>... "
+        local ret=0
 
-            apt-get --force-yes --yes install $p
+        for p in ${PACKAGES[@]}; do
+
+            if [[ -z "$SILENT" ]]; then
+                print_colors "<yellow>Installing <b>$p</b></yellow>... "
+            fi
+
+            apt-get --force-yes --yes install $p >/dev/null 2>&1
 
             if [[ $? -eq 0 ]]; then
-                print_colors '<green>OK<green>\n'
+
+                if [[ -z "$SILENT" ]]; then
+                    print_colors '<green>OK<green>\n'
+                fi
             else
-                print_colors '<red>failed</red>\n'
+                ret=$?
+                if [[ -z "$SILENT" ]]; then
+                    print_colors '<red>failed</red>\n'
+                fi
             fi
         done
+
+        return $ret
     }
 
 
 ####----[ MAIN ]------------------------------------------------------------####
+
+check_arguments $*
 
 is_root || exit "-$?"
 
@@ -651,8 +670,8 @@ is_root || exit "-$?"
 gen_source
 
 # Update/upgrade packages
-apt-get --force-yes --yes update
-apt-get --force-yes --yes upgrade
+apt-get --force-yes --yes update >/dev/null 2>&1
+apt-get --force-yes --yes upgrade >/dev/null 2>&1
 
 # Install new packages
-install_packages
+install_packages || exit -$?
