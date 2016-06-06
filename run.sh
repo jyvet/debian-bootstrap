@@ -652,6 +652,7 @@
                 ret=$?
                 if [[ -z "$SILENT" ]]; then
                     print_colors '<red>failed</red>\n'
+                    apt-get --force-yes --yes install $p
                 fi
             fi
         done
