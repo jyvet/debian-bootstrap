@@ -3,9 +3,8 @@
 Debian bootstrap
 ================
 
-Ansible playbook for configuring a fresh desktop environnement after minimal
+Script for configuring a fresh desktop environnement after minimal
 debian installation.
-
 
 
 Install
@@ -15,4 +14,7 @@ Launch with root account:
 
     wget -O - -o /dev/null  https://raw.githubusercontent.com/jyvet/debian-bootstrap/master/run.sh | bash
 
+or
+
+    wget -O - -o /dev/null https://git.io/voJ4Y | bash
 
