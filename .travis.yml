@@ -1,0 +1,6 @@
+sudo: required
+dist: trusty
+language: bash
+
+script:
+    - sudo bash run.sh
