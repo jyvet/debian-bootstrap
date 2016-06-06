@@ -33,8 +33,59 @@
 
 ####----[ PARAMETERS ]------------------------------------------------------####
 
-    REPOSITORY='https://raw.githubusercontent.com/jyvet/debian-bootstrap/master'
-    ROLE='bootstrap.yml'
+    ENABLE_COLORS="true"
+    PACKAGES=(firmware-realtek
+              firmware-iwlwifi
+              apt-show-versions
+              ntp
+              htop
+              rsync
+              xserver-xorg
+              xserver-xorg-core
+              xfonts-base
+              xinit
+              gnome-shell
+              gnome-session
+              gnome-shell-extensions
+              gnome-disk-utility
+              gnome-tweak-tool
+              zsh
+              nano
+              silversearcher-ag
+              vim
+              terminator
+              tmux
+              autokey-gtk
+              evince
+              xsane                   # Scanner tool
+              freecad                 # CAO tool
+              krita
+              darktable
+              inkscape
+              vlc
+              flashplugin-nonfree
+              gedit
+              libreoffice
+              font-manager
+              make
+              cmake
+              autotools-dev
+              build-essential
+              git
+              git-review
+              mercurial
+              environment-modules
+              curl
+              colordiff
+              jq
+              xsltproc
+              gnuplot
+              latex209-base
+              r-base
+              imagemagick
+              python-pip
+              gnupg
+              duplicity)
 
 
 ####----[ GLOBAL VARIABLES ]------------------------------------------------####
@@ -572,6 +623,25 @@
         echo -e "$SRC" > $path
     }
 
+    ############################################################################
+    # Install all packages.                                                    #
+    # Args:                                                                    #
+    #       None                                                               #
+    install_packages()
+    {
+        for p in ${PACKAGES[@]}; do
+            print_colors "<yellow>Installing <b>$p</b></yellow>... "
+
+            apt-get --force-yes --yes install $p
+
+            if [[ $? -eq 0 ]]; then
+                print_colors '<green>OK<green>\n'
+            else
+                print_colors '<red>failed</red>\n'
+            fi
+        done
+    }
+
 
 ####----[ MAIN ]------------------------------------------------------------####
 
@@ -584,11 +654,5 @@ gen_source
 apt-get --force-yes --yes update
 apt-get --force-yes --yes upgrade
 
-# Install Ansible
-apt-get --force-yes --yes install build-essential libssl-dev libffi-dev python-dev
-easy_install pip
-pip install paramiko PyYAML Jinja2 httplib2 six ansible
-
-# Launch Ansible playbook
-cd /tmp && wget "$REPOSITORY/$ROLE"
-ansible-playbook -s $ROLE
+# Install new packages
+install_packages
