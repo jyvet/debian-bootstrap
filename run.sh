@@ -111,7 +111,6 @@
                         pwd)             # Retrieve path where script is located
     readonly SC_NAME=$(basename ${0})    # Retrieve name of the script
     readonly SC_PID=$(echo $$)           # Retrieve PID of the script
-    readonly VERSION=$(lsb_release -cs)  # Version of the current debian
 
 
 ####----[ ERRORS ]----------------------------------------------------------####
@@ -599,6 +598,11 @@
     #       None                                                               #
     gen_source()
     {
+        VERSION=$(lsb_release -cs)
+        if [[ "$?" -ne 0 ]]; then
+            VERSION='stable'
+        fi
+
         if [[ -z "$SILENT" ]]; then
             print_colors "<yellow>Configuring <b>source.list</b></yellow>... "
         fi
