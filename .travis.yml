@@ -1,16 +1,13 @@
 sudo: required
 
-script:
-    - sudo bash run.sh
-
 services:
     - docker
 
 before_install:
-    - docker pull debian
+    - docker pull eboraas/debian:stable
 
 script:
-    - docker run --rm=true -v `pwd`:/debian-bootstrap:rw debian /bin/bash -c "/debian-bootstrap/run.sh"
+    - docker run --rm=true -v `pwd`:/debian-bootstrap:rw eboraas/debian:stable /bin/bash -c "/debian-bootstrap/run.sh"
 
 notifications:
   email: false
