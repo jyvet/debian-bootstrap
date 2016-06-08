@@ -8,7 +8,7 @@ services:
 
 before_install:
     - docker pull debian
-    - docker run debian /bin/sh -c "wget -O - -o /dev/null  https://raw.githubusercontent.com/jyvet/debian-bootstrap/master/run.sh | bash"
+    - docker run debian /bin/bash -c "apt-get install wget; wget -O - -o /dev/null  https://raw.githubusercontent.com/jyvet/debian-bootstrap/master/run.sh | /bin/bash"
 
 script:
-    - wget -O - -o /dev/null  https://raw.githubusercontent.com/jyvet/debian-bootstrap/master/run.sh | bash
+    - wget -O - -o /dev/null  https://raw.githubusercontent.com/jyvet/debian-bootstrap/master/run.sh | /bin/bash
