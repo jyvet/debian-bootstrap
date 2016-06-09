@@ -650,7 +650,7 @@
                 print_colors "<yellow>Installing <b>$p</b></yellow>... \n"
             fi
 
-            apt-get --force-yes --yes install $p
+            DEBIAN_FRONTEND=noninteractive apt-get --force-yes --yes install $p
 
             if [[ $? -eq 0 ]]; then
 
