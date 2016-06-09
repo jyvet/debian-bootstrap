@@ -648,7 +648,7 @@
                 print_colors "<yellow>Installing <b>$p</b></yellow>... "
             fi
 
-            apt-get --force-yes --yes install $p >/dev/null 2>&1
+            apt-get --force-yes --yes install $p
 
             if [[ $? -eq 0 ]]; then
 
