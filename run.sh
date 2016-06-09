@@ -51,7 +51,6 @@
     ENABLE_COLORS="true"
     PACKAGES=(firmware-realtek
               firmware-iwlwifi
-              apt-show-versions
               ntp
               htop
               rsync
@@ -259,6 +258,10 @@
 
         # Shift arguments
         shift
+
+        if [[ "$TERM" == '' ]]; then
+            TERM='xterm-256color'
+        fi
 
         # Check if colors are enabled and prepare output string
         if [[ "$ENABLE_COLORS" == "true" ]]; then
