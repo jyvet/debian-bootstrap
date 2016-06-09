@@ -261,9 +261,9 @@
         # Shift arguments
         shift
 
-        if [[ -z "$TERM" ]]; then
-            targs="-T xterm-256color"
-        fi
+        #if [[ -z "$TERM" ]]; then
+            targs='-T xterm-256color'
+        #fi
 
         # Check if colors are enabled and prepare output string
         if [[ "$ENABLE_COLORS" == "true" ]]; then
@@ -603,10 +603,10 @@
     #       None                                                               #
     gen_source()
     {
-        VERSION=$(hostnamectl | grep Debian | sed -e 's/.*(\([a-z]*\)).*/\1/')
-        if [[ "$?" -ne 0 ]]; then
+        #VERSION=$(hostnamectl | grep Debian | sed -e 's/.*(\([a-z]*\)).*/\1/')
+        #if [[ "$?" -ne 0 ]]; then
             VERSION='stable'
-        fi
+        #fi
 
         if [[ -z "$SILENT" ]]; then
             print_colors "<yellow>Configuring <b>source.list</b></yellow>... "
