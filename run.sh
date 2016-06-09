@@ -248,6 +248,8 @@
     # Result: print resulting string in stdout.                                #
     print_colors()
     {
+        local targs=''
+
         # Check number of input arguments
         if [[ "$#" -lt 1 ]]; then
             print_error $EINVNUM; return $?
@@ -259,14 +261,14 @@
         # Shift arguments
         shift
 
-        if [[ "$TERM" == '' ]]; then
-            export TERM='xterm-256color'
+        if [[ -z "$TERM" ]]; then
+            targs="-T xterm-256color"
         fi
 
         # Check if colors are enabled and prepare output string
         if [[ "$ENABLE_COLORS" == "true" ]]; then
             # End tags
-            local normal='$(tput sgr0)'
+            local normal='$(tput $targs sgr0)'
             local black="$normal"
             local red="$normal"
             local green="$normal"
@@ -280,35 +282,35 @@
             local white="$normal"
             local orange="$normal"
             local b="$normal"
-            local i='$(tput ritm)'
-            local u='$(tput rmul)'
+            local i='$(tput $targs ritm)'
+            local u='$(tput $targs rmul)'
             tags_replace "$in" 'OUT' '<\/' '>'
 
             # Start tags
-            if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
-                yellow='$(tput setaf 190)'
-                orange='$(tput setaf 172)'
-                grey1='$(tput setaf 240)'
-                grey2='$(tput setaf 239)'
-                grey3='$(tput setaf 238)'
+            if [[ $(tput $targs colors) -ge 256 ]] 2>/dev/null; then
+                yellow='$(tput $targs setaf 190)'
+                orange='$(tput $targs setaf 172)'
+                grey1='$(tput $targs setaf 240)'
+                grey2='$(tput $targs setaf 239)'
+                grey3='$(tput $targs setaf 238)'
             else
-                yellow='$(tput setaf 3)'
-                orange='$(tput setaf 3)'
-                grey1='$(tput setaf 0)'
-                grey2='$(tput setaf 0)'
-                grey3='$(tput setaf 0)'
+                yellow='$(tput $targs setaf 3)'
+                orange='$(tput $targs setaf 3)'
+                grey1='$(tput $targs setaf 0)'
+                grey2='$(tput $targs setaf 0)'
+                grey3='$(tput $targs setaf 0)'
             fi
 
-            black='$(tput setaf 0)'
-            red='$(tput setaf 1)'
-            green='$(tput setaf 2)'
-            blue='$(tput setaf 4)'
-            magenta='$(tput setaf 5)'
-            cyan='$(tput setaf 6)'
-            white='$(tput setaf 7)'
-            b='$(tput bold)'
-            i='$(tput sitm)'
-            u='$(tput smul)'
+            black='$(tput $targs setaf 0)'
+            red='$(tput $targs setaf 1)'
+            green='$(tput $targs setaf 2)'
+            blue='$(tput $targs setaf 4)'
+            magenta='$(tput $targs setaf 5)'
+            cyan='$(tput $targs setaf 6)'
+            white='$(tput $targs setaf 7)'
+            b='$(tput $targs bold)'
+            i='$(tput $targs sitm)'
+            u='$(tput $targs smul)'
             tags_replace "$OUT" 'OUT' '<' '>'
         else
             tags_remove "$in" 'OUT' '</' '>'
@@ -515,7 +517,7 @@
 
         # Translate arguments to short options
         local args=''
-        for arg in $targs; do
+        for arg in tput $targs; do
             local delim=''
             case $arg in
                 --help)            args="${args}-h ";;
@@ -645,7 +647,7 @@
         for p in ${PACKAGES[@]}; do
 
             if [[ -z "$SILENT" ]]; then
-                print_colors "<yellow>Installing <b>$p</b></yellow>... "
+                print_colors "<yellow>Installing <b>$p</b></yellow>... \n"
             fi
 
             apt-get --force-yes --yes install $p
