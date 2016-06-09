@@ -260,7 +260,7 @@
         shift
 
         if [[ "$TERM" == '' ]]; then
-            TERM='xterm-256color'
+            export TERM='xterm-256color'
         fi
 
         # Check if colors are enabled and prepare output string
@@ -601,7 +601,7 @@
     #       None                                                               #
     gen_source()
     {
-        VERSION=$(lsb_release -cs)
+        VERSION=$(hostnamectl | grep Debian | sed -e 's/.*(\([a-z]*\)).*/\1/')
         if [[ "$?" -ne 0 ]]; then
             VERSION='stable'
         fi
