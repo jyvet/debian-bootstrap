@@ -33,6 +33,7 @@
 #%        --enable-colors, --colors    Enable colors.                          #
 #%    -h, --help                       Print this help.                        #
 #%    -s, --silent                     Do not print anything.                  #
+#%    -t, --test                       Use test mode with predefined var env.  #
 #%    -v, -vv, -vvv                    Verbosity.                              #
 #%        --version                    Print script information.               #
 #%                                                                             #
@@ -261,9 +262,9 @@
         # Shift arguments
         shift
 
-        #if [[ -z "$TERM" ]]; then
+        if [[ "$TEST_MODE" == 'true' ]]; then
             targs='-T xterm-256color'
-        #fi
+        fi
 
         # Check if colors are enabled and prepare output string
         if [[ "$ENABLE_COLORS" == "true" ]]; then
@@ -521,6 +522,7 @@
             local delim=''
             case $arg in
                 --help)            args="${args}-h ";;
+                --test)            args="${args}-t ";;
                 --version)         info; exit 0;;
                 *) [[ "${arg:0:1}" == '-' ]] || delim="\""
                     args="${args}${delim}${arg}${delim} ";;
@@ -531,7 +533,7 @@
         eval set -- $args
 
         # Available options
-        local options='ac:e:hkr:'
+        local options='ht'
 
         # Desactivate error handling by getops
         OPTERR=0
@@ -540,6 +542,7 @@
         while getopts $options OPT; do
             case "$OPT" in
                 h)  usage_full; exit 0;;
+                t)  TEST_MODE='true';;
                 \?) print_error $EINVOPT; usage; return $EINVOPT;;
             esac
         done
@@ -635,10 +638,15 @@
     #       None                                                               #
     gen_source()
     {
-        #VERSION=$(hostnamectl | grep Debian | sed -e 's/.*(\([a-z]*\)).*/\1/')
-        #if [[ "$?" -ne 0 ]]; then
+        if [[ "$TEST_MODE" == 'true' ]]; then
             VERSION='stable'
-        #fi
+        else
+            VERSION=$(lsb_release -cs)
+            if [[ "$?" -ne 0 ]]; then
+                VERSION=$(hostnamectl | grep Debian |
+                          sed -e 's/.*(\([a-z]*\)).*/\1/')
+            fi
+        fi
 
         if [[ -z "$SILENT" ]]; then
             print_colors "<yellow>Configuring <b>source.list</b></yellow>... "
