@@ -683,7 +683,8 @@
     install_packages()
     {
         local ret=0
-        local varenv='DEBIAN_FRONTEND=noninteractive'
+
+        export DEBIAN_FRONTEND=noninteractive
 
         for p in ${PACKAGES[@]}; do
 
@@ -691,7 +692,7 @@
                 print_colors "<yellow>Installing <b>$p</b></yellow>... "
             fi
 
-            $varenv apt-get --force-yes --yes install $p > /dev/null 2>&1
+            apt-get --force-yes --yes install $p > /dev/null 2>&1
 
             if [[ $? -eq 0 ]]; then
 
@@ -702,7 +703,7 @@
                 ret=$?
                 if [[ -z "$SILENT" ]]; then
                     print_colors '<red>failed</red>\n'
-                    $varenv apt-get --force-yes --yes install $p
+                    apt-get --force-yes --yes install $p
                 fi
             fi
         done
