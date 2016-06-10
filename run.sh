@@ -598,6 +598,38 @@
     }
 
     ############################################################################
+    # Update and upgrade apt.                                                  #
+    # Args:                                                                    #
+    #       None                                                               #
+    upgrade()
+    {
+        local ret=0
+
+        apt-get --force-yes --yes update > /dev/null 2>&1
+
+        if [[ -z "$SILENT" ]]; then
+            print_colors "<yellow>Upgrading <b>packages</b></yellow>... "
+        fi
+
+        apt-get --force-yes --yes upgrade > /dev/null 2>&1
+
+        if [[ $? -eq 0 ]]; then
+
+            if [[ -z "$SILENT" ]]; then
+                print_colors '<green>OK<green>\n'
+            fi
+        else
+            ret=$?
+            if [[ -z "$SILENT" ]]; then
+                print_colors '<red>failed</red>\n'
+                apt-get --force-yes --yes upgrade > /dev/null 2>&1
+            fi
+        fi
+
+        return $ret
+    }
+
+    ############################################################################
     # Configure source.list file.                                              #
     # Args:                                                                    #
     #       None                                                               #
@@ -643,14 +675,15 @@
     install_packages()
     {
         local ret=0
+        local varenv='DEBIAN_FRONTEND=noninteractive'
 
         for p in ${PACKAGES[@]}; do
 
             if [[ -z "$SILENT" ]]; then
-                print_colors "<yellow>Installing <b>$p</b></yellow>... \n"
+                print_colors "<yellow>Installing <b>$p</b></yellow>... "
             fi
 
-            DEBIAN_FRONTEND=noninteractive apt-get --force-yes --yes install $p
+            $varenv apt-get --force-yes --yes install $p > /dev/null 2>&1
 
             if [[ $? -eq 0 ]]; then
 
@@ -661,7 +694,7 @@
                 ret=$?
                 if [[ -z "$SILENT" ]]; then
                     print_colors '<red>failed</red>\n'
-                    apt-get --force-yes --yes install $p
+                    $varenv apt-get --force-yes --yes install $p
                 fi
             fi
         done
@@ -680,8 +713,7 @@ is_root || exit "-$?"
 gen_source
 
 # Update/upgrade packages
-apt-get --force-yes --yes update >/dev/null 2>&1
-apt-get --force-yes --yes upgrade >/dev/null 2>&1
+upgrade
 
 # Install new packages
 install_packages || exit -$?
