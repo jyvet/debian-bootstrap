@@ -542,7 +542,7 @@
         while getopts $options OPT; do
             case "$OPT" in
                 h)  usage_full; exit 0;;
-                t)  print_info 'Enabling test mode'; TEST_MODE='true';;
+                t)  echo 'Enabling test mode'; TEST_MODE='true';;
                 \?) print_error $EINVOPT; usage; return $EINVOPT;;
             esac
         done
