@@ -249,7 +249,7 @@
     # Result: print resulting string in stdout.                                #
     print_colors()
     {
-        local targs=''
+        local cargs=''
 
         # Check number of input arguments
         if [[ "$#" -lt 1 ]]; then
@@ -263,13 +263,13 @@
         shift
 
         if [[ "$TEST_MODE" == 'true' ]]; then
-            targs='-T xterm-256color'
+            cargs='-T xterm-256color'
         fi
 
         # Check if colors are enabled and prepare output string
         if [[ "$ENABLE_COLORS" == "true" ]]; then
             # End tags
-            local normal='$(tput $targs sgr0)'
+            local normal='$(tput $cargs sgr0)'
             local black="$normal"
             local red="$normal"
             local green="$normal"
@@ -283,35 +283,35 @@
             local white="$normal"
             local orange="$normal"
             local b="$normal"
-            local i='$(tput $targs ritm)'
-            local u='$(tput $targs rmul)'
+            local i='$(tput $cargs ritm)'
+            local u='$(tput $cargs rmul)'
             tags_replace "$in" 'OUT' '<\/' '>'
 
             # Start tags
-            if [[ $(tput $targs colors) -ge 256 ]] 2>/dev/null; then
-                yellow='$(tput $targs setaf 190)'
-                orange='$(tput $targs setaf 172)'
-                grey1='$(tput $targs setaf 240)'
-                grey2='$(tput $targs setaf 239)'
-                grey3='$(tput $targs setaf 238)'
+            if [[ $(tput $cargs colors) -ge 256 ]] 2>/dev/null; then
+                yellow='$(tput $cargs setaf 190)'
+                orange='$(tput $cargs setaf 172)'
+                grey1='$(tput $cargs setaf 240)'
+                grey2='$(tput $cargs setaf 239)'
+                grey3='$(tput $cargs setaf 238)'
             else
-                yellow='$(tput $targs setaf 3)'
-                orange='$(tput $targs setaf 3)'
-                grey1='$(tput $targs setaf 0)'
-                grey2='$(tput $targs setaf 0)'
-                grey3='$(tput $targs setaf 0)'
+                yellow='$(tput $cargs setaf 3)'
+                orange='$(tput $cargs setaf 3)'
+                grey1='$(tput $cargs setaf 0)'
+                grey2='$(tput $cargs setaf 0)'
+                grey3='$(tput $cargs setaf 0)'
             fi
 
-            black='$(tput $targs setaf 0)'
-            red='$(tput $targs setaf 1)'
-            green='$(tput $targs setaf 2)'
-            blue='$(tput $targs setaf 4)'
-            magenta='$(tput $targs setaf 5)'
-            cyan='$(tput $targs setaf 6)'
-            white='$(tput $targs setaf 7)'
-            b='$(tput $targs bold)'
-            i='$(tput $targs sitm)'
-            u='$(tput $targs smul)'
+            black='$(tput $cargs setaf 0)'
+            red='$(tput $cargs setaf 1)'
+            green='$(tput $cargs setaf 2)'
+            blue='$(tput $cargs setaf 4)'
+            magenta='$(tput $cargs setaf 5)'
+            cyan='$(tput $cargs setaf 6)'
+            white='$(tput $cargs setaf 7)'
+            b='$(tput $cargs bold)'
+            i='$(tput $cargs sitm)'
+            u='$(tput $cargs smul)'
             tags_replace "$OUT" 'OUT' '<' '>'
         else
             tags_remove "$in" 'OUT' '</' '>'
@@ -518,7 +518,7 @@
 
         # Translate arguments to short options
         local args=''
-        for arg in tput $targs; do
+        for arg in $targs; do
             local delim=''
             case $arg in
                 --help)            args="${args}-h ";;
@@ -542,7 +542,7 @@
         while getopts $options OPT; do
             case "$OPT" in
                 h)  usage_full; exit 0;;
-                t)  TEST_MODE='true';;
+                t)  print_info 'Enabling test mode'; TEST_MODE='true';;
                 \?) print_error $EINVOPT; usage; return $EINVOPT;;
             esac
         done
