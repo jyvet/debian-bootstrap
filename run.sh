@@ -52,9 +52,14 @@
     ENABLE_COLORS="true"
     PACKAGES=(firmware-realtek
               firmware-iwlwifi
+              unzip
+              unrar
               ntp
               htop
+              logwatch
               rsync
+              openssh-client
+              util-linux            # Provide taskset to bind threads.
               xserver-xorg
               xserver-xorg-core
               xfonts-base
@@ -64,6 +69,8 @@
               gnome-shell-extensions
               gnome-disk-utility
               gnome-tweak-tool
+              gnome-system-monitor   # Process viewer and system monitor.
+              gparted
               zsh
               nano
               silversearcher-ag
@@ -72,12 +79,17 @@
               tmux
               autokey-gtk
               evince
-              xsane                   # Scanner tool
-              freecad                 # CAO tool
+              xsane                   # Scanner tool.
+              freecad                 # CAO tool.
+              blender
               krita
-              darktable
+              darktable               # Photo editor/developer like Lightroom.
               inkscape
               vlc
+              youtube-dl              # Youtube video downloader.
+              subliminal              # Get subtitles from a video.
+              handbrake               # Convert video from nearly any format.
+              vivaldi-stable          # Browser based on chromium.
               flashplugin-nonfree
               gedit
               libreoffice
@@ -90,6 +102,8 @@
               git-review
               mercurial
               environment-modules
+              colorgcc
+              wget
               curl
               colordiff
               jq
@@ -99,6 +113,7 @@
               r-base
               imagemagick
               python-pip
+              ansible
               gnupg
               duplicity)
 
