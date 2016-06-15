@@ -89,7 +89,7 @@
               youtube-dl              # Youtube video downloader.
               subliminal              # Get subtitles from a video.
               handbrake               # Convert video from nearly any format.
-              vivaldi-stable          # Browser based on chromium.
+              vivaldi                 # Browser based on chromium.
               flashplugin-nonfree
               gedit
               libreoffice
@@ -101,6 +101,7 @@
               git
               git-review
               mercurial
+              astyle                  # Source code indenter and formatter.
               environment-modules
               colorgcc
               wget
