@@ -50,73 +50,83 @@
 ####----[ PARAMETERS ]------------------------------------------------------####
 
     ENABLE_COLORS="true"
-    PACKAGES=(firmware-realtek
-              firmware-iwlwifi
-              unzip
-              unrar
-              ntp
-              htop
-              logwatch
-              rsync
-              openssh-client
-              util-linux            # Provide taskset to bind threads.
-              xserver-xorg
-              xserver-xorg-core
-              xfonts-base
-              xinit
-              gnome-shell
-              gnome-session
-              gnome-shell-extensions
-              gnome-disk-utility
-              gnome-tweak-tool
-              gnome-system-monitor   # Process viewer and system monitor.
-              gparted
-              zsh
-              nano
-              silversearcher-ag
-              vim
-              terminator
-              tmux
-              autokey-gtk
-              evince
-              xsane                   # Scanner tool.
-              freecad                 # CAO tool.
-              blender
-              krita
-              darktable               # Photo editor/developer like Lightroom.
-              inkscape
-              vlc
-              youtube-dl              # Youtube video downloader.
-              subliminal              # Get subtitles from a video.
-              handbrake               # Convert video from nearly any format.
-              vivaldi                 # Browser based on chromium.
-              flashplugin-nonfree
-              gedit
-              libreoffice
-              font-manager
-              make
-              cmake
-              autotools-dev
-              build-essential
-              git
-              git-review
-              mercurial
-              astyle                  # Source code indenter and formatter.
-              environment-modules
-              colorgcc
-              wget
-              curl
-              colordiff
-              jq
-              xsltproc
-              gnuplot
-              latex209-base
-              r-base
-              imagemagick
-              python-pip
-              ansible
-              gnupg
-              duplicity)
+    APT_PACKAGES=(firmware-realtek       # Firmware for ethernet adapter.
+                  firmware-iwlwifi       # Firmware for wifi adapter.
+                  unzip                  # Decompression utility for ZIP format.
+                  unrar                  # Decompression utility for RAR format.
+                  ntp                    # Network Time Protocol.
+                  htop                   # Interactive process viewer for Unix.
+                  watch                  # Run command repeatedly.
+                  logwatch               # Customizable log analysis system.
+                  rsync                  # Copy and sync files remotely.
+                  openssh-client         # Utilities based on the SSH protocol.
+                  util-linux             # Provide taskset to bind threads.
+                  hwloc                  # Manage hardware topology.
+                  xserver-xorg           # X server.
+                  xserver-xorg-core      # X server related.
+                  xfonts-base            # Fonts package.
+                  xinit                  # Allow a user to manually start X.
+                  gnome-shell            # Gnome desktop environnement.
+                  gnome-session          # Gnome session manager.
+                  gnome-shell-extensions # Gnome extensions.
+                  gnome-disk-utility     # Gnome disk management utility.
+                  gnome-tweak-tool       # Gnome tools to change appearance.
+                  gnome-system-monitor   # Process viewer and system monitor.
+                  gedit                  # Gnome text editor.
+                  gparted                # Graphical partition editor.
+                  zsh                    # Z shell designed for interactive use.
+                  vim                    # Clone of vi editor for Unix.
+                  nano                   # Simple, modeless editor.
+                  silversearcher-ag      # Code-searching tool similar to ack.
+                  terminator             # Many Gnome Terminals in one window.
+                  tmux                   # Terminal multiplexer.
+                  screen                 # Another terminal multiplexer.
+                  autokey-gtk            # Desktop automation utility for Linux.
+                  evince                 # Viewer for multiple document formats.
+                  xsane                  # 'Scanner Access Now Easy' tool.
+                  freecad                # Parametric 3D CAD modeler.
+                  fritzing               # CAD for the design of electronics hw.
+                  blender                # 3D computer graphics software.
+                  krita                  # Raster graphics editor (~Photoshop).
+                  darktable              # Photo editor (~Lightroom).
+                  inkscape               # Vector graphics editor.
+                  imagemagick            # Create, edit, or convert images.
+                  sozi                   # Build SVG presentations (~Prezi).
+                  vlc                    # Multimedia player and framework.
+                  youtube-dl             # Youtube video downloader.
+                  subliminal             # Get subtitles for a video.
+                  handbrake              # Convert videos from any format.
+                  flashplugin-nonfree    # Add Flash plugin to browser.
+                  libreoffice            # Suite of apps for creating documents.
+                  font-manager           # Manage many font files.
+                  make                   # Execute Makefiles script.
+                  cmake                  # Tools to build, test and packages.
+                  autotools-dev          # Tools to assist in making packages.
+                  build-essential        # Basic development kit for software.
+                  git                    # Distributed version control system.
+                  git-review             # Tool to simplify working with Gerrit.
+                  mercurial              # Distributed revision-control tool.
+                  astyle                 # Source code indenter and formatter.
+                  environment-modules    # dynamic modification of a user's env.
+                  colorgcc               # Colorize the terminal output of GCC.
+                  colordiff              # Bring color to diff command.
+                  wget                   # Retrieve content from web servers.
+                  curl                   # Transfer data using many protocols.
+                  jq                     # Flexible command-line JSON processor.
+                  xsltproc               # Transform XML doc from XSLT.
+                  gnuplot                # Generate 2 and 3D plots.
+                  latex209-base          # Typesetting tools for scientific doc.
+                  pdfjam                 # Merge/split PDF files.
+                  r-base                 # Env for stats computing and graphics.
+                  python-pip             # Tool for installing Python packages.
+                  gem                    # Tool for installing Ruby packages.
+                  ansible                # Configure and manage computer nodes.
+                  gnupg                  # GNU Privacy Guard (GnuPG or GPG).
+                  duplicity)             # Incremental encrypted remote backup.
+
+    # TODO: Install deb from website:
+    #   - vivaldi (visit: https://vivaldi.com)
+    #   - kernel + intel graphics driver (visit: https://01.org/linuxgraphics/)
 
 
 ####----[ GLOBAL VARIABLES ]------------------------------------------------####
@@ -693,16 +703,16 @@
     }
 
     ############################################################################
-    # Install all packages.                                                    #
+    # Install new apt packages.                                                #
     # Args:                                                                    #
     #       None                                                               #
-    install_packages()
+    install_apt_packages()
     {
         local ret=0
 
         export DEBIAN_FRONTEND=noninteractive
 
-        for p in ${PACKAGES[@]}; do
+        for p in ${APT_PACKAGES[@]}; do
 
             if [[ -z "$SILENT" ]]; then
                 print_colors "<yellow>Installing <b>$p</b></yellow>... "
@@ -740,5 +750,5 @@ gen_source
 # Update/upgrade packages
 upgrade
 
-# Install new packages
-install_packages || exit -$?
+# Install new apt packages
+install_apt_packages || exit -$?
