@@ -118,7 +118,9 @@
                   latex209-base          # Typesetting tools for scientific doc.
                   pdfjam                 # Merge/split PDF files.
                   r-base                 # Env for stats computing and graphics.
+                  python-dev             # Developer package for Python.
                   python-pip             # Tool for installing Python packages.
+                  ruby-dev               # Developer package for Ruby.
                   gem                    # Tool for installing Ruby packages.
                   ansible                # Configure and manage computer nodes.
                   gnupg                  # GNU Privacy Guard (GnuPG or GPG).
