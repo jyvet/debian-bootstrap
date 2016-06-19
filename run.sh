@@ -124,6 +124,8 @@
                   gnupg                  # GNU Privacy Guard (GnuPG or GPG).
                   duplicity)             # Incremental encrypted remote backup.
 
+    GEM_PACKAGES=(gimli)                 # Generate PDF from Markdown file.
+
     # TODO: Install deb from website:
     #   - vivaldi (visit: https://vivaldi.com)
     #   - kernel + intel graphics driver (visit: https://01.org/linuxgraphics/)
@@ -703,22 +705,20 @@
     }
 
     ############################################################################
-    # Install new apt packages.                                                #
+    # Install new packages by using provided command line.                     #
     # Args:                                                                    #
-    #       None                                                               #
-    install_apt_packages()
+    #       - $1: package name                                                 #
+    #       - $1: command to run                                               #
+    install_package()
     {
         local ret=0
+        local package=$1
+        local cmd=$2
 
-        export DEBIAN_FRONTEND=noninteractive
-
-        for p in ${APT_PACKAGES[@]}; do
-
-            if [[ -z "$SILENT" ]]; then
-                print_colors "<yellow>Installing <b>$p</b></yellow>... "
-            fi
-
-            apt-get --force-yes --yes install $p > /dev/null 2>&1
+        if [[ -z "$SILENT" ]]; then
+            print_colors "<yellow>Installing <b>$p</b></yellow>... "
+        fi
+            eval "$cmd $package > /dev/null 2>&1"
 
             if [[ $? -eq 0 ]]; then
 
@@ -729,9 +729,39 @@
                 ret=$?
                 if [[ -z "$SILENT" ]]; then
                     print_colors '<red>failed</red>\n'
-                    apt-get --force-yes --yes install $p
+                    eval "$cmd $package"
                 fi
             fi
+
+        return $ret
+    }
+    ############################################################################
+    # Install new apt packages.                                                #
+    # Args:                                                                    #
+    #       None                                                               #
+    install_apt_packages()
+    {
+        local ret=0
+
+        export DEBIAN_FRONTEND=noninteractive
+
+        for p in ${APT_PACKAGES[@]}; do
+            install_package "$p" 'apt-get --force-yes --yes install'
+        done
+
+        return $ret
+    }
+
+    ############################################################################
+    # Install new gem packages.                                                #
+    # Args:                                                                    #
+    #       None                                                               #
+    install_gem_packages()
+    {
+        local ret=0
+
+        for p in ${GEM_PACKAGES[@]}; do
+            install_package "$p" 'gem install'
         done
 
         return $ret
@@ -752,3 +782,6 @@ upgrade
 
 # Install new apt packages
 install_apt_packages || exit -$?
+
+# Install new gem packages
+install_gem_packages || exit -$?
